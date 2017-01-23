@@ -12,7 +12,7 @@ impl IonicContext
 {
     pub fn new() -> Self
     {
-        let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
+        let glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
         return IonicContext
             {
                 glfw_context: glfw
@@ -24,9 +24,9 @@ impl IonicContext
         self.glfw_context
     }
 
-    pub fn create_window(&self, title: &str, width: u32, height: u32, windowMode: glfw::WindowMode) -> IonicWindow
+    pub fn create_window(&self, title: &str, width: u32, height: u32, window_mode: glfw::WindowMode) -> IonicWindow
     {
-        let mut window = self.glfw_context.create_window(width, height, title, windowMode).expect("Faild to create GLFW window.").0;
+        let window = self.glfw_context.create_window(width, height, title, window_mode).expect("Faild to create GLFW window.").0;
         IonicWindow::new(window, title)
     }
 }

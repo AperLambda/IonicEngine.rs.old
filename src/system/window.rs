@@ -2,7 +2,7 @@ use glfw::Window;
 
 pub struct IonicWindow
 {
-    handle: Window,
+    pub handle: Window,
     title: String
 }
 
@@ -17,11 +17,6 @@ impl IonicWindow
             }
     }
 
-    pub fn get_handle(&self) -> Window
-    {
-        self.handle
-    }
-
     pub fn get_title(&self) -> &str
     {
         self.title.as_ref()
@@ -31,5 +26,10 @@ impl IonicWindow
     {
         let (width, height) = self.handle.get_size();
         (width as u32, height as u32)
+    }
+
+    pub fn set_size(&mut self, width: u32, height: u32)
+    {
+        self.handle.set_size(width as i32, height as i32);
     }
 }

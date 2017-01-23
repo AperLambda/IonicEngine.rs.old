@@ -1,3 +1,4 @@
+extern crate gl;
 extern crate glfw;
 
 use glfw::{Action, Context, Key};
@@ -14,13 +15,20 @@ fn main()
 
     let mut glfw = context.get_glfw();
 
-    let mut window = iwindow.get_handle();
+    let mut window = iwindow.handle;
 
     window.set_key_polling(true);
     window.make_current();
 
+    gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
+
     while !window.should_close()
     {
+        unsafe
+        {
+            gl::Clear(gl::COLOR_BUFFER_BIT);
+        }
+
         glfw.poll_events();
     }
 
