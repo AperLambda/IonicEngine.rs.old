@@ -1,0 +1,11 @@
+[package]
+name = "ionic_engine"
+version = "0.1.0"
+authors = ["w67clement"]
+
+[dependencies]
+gl = "0.6.*"
+
+[dependencies.glfw]
+git = "https://github.com/PistonDevelopers/glfw-rs.git"
+
