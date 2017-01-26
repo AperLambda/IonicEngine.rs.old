@@ -5,7 +5,4 @@ pub use glfw::{Action, Context, Glfw, Key};
 
 pub mod system;
 
-pub fn get_version() -> String
-{
-    "1.0.0".to_string()
-}
+pub static VERSION: &'static str = "1.0.0-1";

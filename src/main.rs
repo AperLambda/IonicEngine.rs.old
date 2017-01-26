@@ -20,15 +20,18 @@ fn main()
     window.set_key_polling(true);
     window.make_current();
 
+    //context.load_gl(&iwindow);
     gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
 
     while !window.should_close()
     {
         unsafe
         {
+            gl::ClearColor(0.0, 0.0, 0.0, 1.0);
             gl::Clear(gl::COLOR_BUFFER_BIT);
         }
 
+        window.swap_buffers();
         glfw.poll_events();
     }
 

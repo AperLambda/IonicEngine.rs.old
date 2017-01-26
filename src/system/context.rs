@@ -1,3 +1,4 @@
+extern crate gl;
 extern crate glfw;
 
 use glfw::Glfw;
@@ -28,5 +29,10 @@ impl IonicContext
     {
         let window = self.glfw_context.create_window(width, height, title, window_mode).expect("Faild to create GLFW window.").0;
         IonicWindow::new(window, title)
+    }
+
+    pub fn load_gl(&self, mut window: IonicWindow)
+    {
+        gl::load_with(|symbol| window.handle.get_proc_address(symbol) as *const _);
     }
 }
