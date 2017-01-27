@@ -3,6 +3,9 @@ language: rust
 os:
   - linux
 
+dist: trusty
+sudo: required
+
 addons:
   apt:
     sources:
