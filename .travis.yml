@@ -1,3 +1,7 @@
 language: rust
 os:
   - linux
+addons:
+    packages:
+      - cmake
+      - cmake-data
