@@ -1,4 +1,4 @@
-use glfw::Window;
+use glfw::{Context, Window};
 
 pub struct IonicWindow
 {
@@ -36,5 +36,10 @@ impl IonicWindow
     pub fn set_size(&mut self, width: u32, height: u32)
     {
         self.handle.set_size(width as i32, height as i32);
+    }
+
+    pub fn make_current(&mut self)
+    {
+        self.handle.make_current();
     }
 }

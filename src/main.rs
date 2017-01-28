@@ -19,8 +19,9 @@ fn main()
         let mut window = &mut iwindow.handle;
 
         window.set_key_polling(true);
-        window.make_current();
     }
+
+    iwindow.make_current();
 
     context.load_gl(&mut iwindow);
 
