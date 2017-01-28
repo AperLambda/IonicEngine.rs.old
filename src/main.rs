@@ -1,40 +1,40 @@
 extern crate gl;
 extern crate glfw;
 
-use glfw::{Action, Context, Key};
+use glfw::{Context};
 
 mod system;
 
-use system::context::IonicContext;
+use system::context::{IonicContext, WindowMode};
 
 fn main()
 {
     let context = IonicContext::new();
-    let iwindow = context.create_window("Pootis", 800, 600, glfw::WindowMode::Windowed);
-    println!("Window: Title: '{}', Width: {}, Height: {}", iwindow.get_title(), iwindow.get_size().0, iwindow.get_size().1);
-
     let mut glfw = context.get_glfw();
 
-    let mut window = iwindow.handle;
+    let mut iwindow = context.create_window("Test Window", 800, 600, WindowMode::Windowed);
+    println!("Window: Title: '{}', Width: {}, Height: {}", iwindow.get_title(), iwindow.get_size().0, iwindow.get_size().1);
 
-    window.set_key_polling(true);
-    window.make_current();
-
-    //context.load_gl(&iwindow);
-    gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
-
-    while !window.should_close()
     {
-        unsafe
-        {
-            gl::ClearColor(0.0, 0.0, 0.0, 1.0);
-            gl::Clear(gl::COLOR_BUFFER_BIT);
-        }
+        let mut window = &mut iwindow.handle;
 
-        window.swap_buffers();
-        glfw.poll_events();
+        window.set_key_polling(true);
+        window.make_current();
     }
 
-    //window.title = "Prout";
-    //println!("{}", window.title);
+    context.load_gl(&mut iwindow);
+
+    let mut window = &mut iwindow.handle;
+
+    while !window.should_close()
+        {
+            unsafe
+                {
+                    gl::ClearColor(0.0, 0.0, 0.0, 1.0);
+                    gl::Clear(gl::COLOR_BUFFER_BIT);
+                }
+
+            window.swap_buffers();
+            glfw.poll_events();
+        }
 }

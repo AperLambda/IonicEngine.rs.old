@@ -1,7 +1,7 @@
 extern crate gl;
 extern crate glfw;
 
-use glfw::Glfw;
+pub use glfw::{Glfw, WindowMode};
 use system::window::IonicWindow;
 
 pub struct IonicContext
@@ -25,13 +25,13 @@ impl IonicContext
         self.glfw_context
     }
 
-    pub fn create_window(&self, title: &str, width: u32, height: u32, window_mode: glfw::WindowMode) -> IonicWindow
+    pub fn create_window(&self, title: &str, width: u32, height: u32, window_mode: WindowMode) -> IonicWindow
     {
         let window = self.glfw_context.create_window(width, height, title, window_mode).expect("Faild to create GLFW window.").0;
         IonicWindow::new(window, title)
     }
 
-    pub fn load_gl(&self, mut window: IonicWindow)
+    pub fn load_gl(&self, window: &mut IonicWindow)
     {
         gl::load_with(|symbol| window.handle.get_proc_address(symbol) as *const _);
     }
