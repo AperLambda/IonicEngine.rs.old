@@ -42,4 +42,17 @@ impl IonicWindow
     {
         self.handle.make_current();
     }
+
+    /// Swaps the front and back buffers of the window. If the swap interval is
+    /// greater than zero, the GPU driver waits the specified number of screen
+    /// updates before swapping the buffers.
+    pub fn swap_buffers(&mut self)
+    {
+        self.handle.swap_buffers();
+    }
+
+    pub fn should_close(&self) -> bool
+    {
+        self.handle.should_close()
+    }
 }

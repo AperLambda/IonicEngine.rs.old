@@ -27,9 +27,7 @@ fn main()
 
     context.load_gl();
 
-    let mut window = &mut iwindow.handle;
-
-    while !window.should_close()
+    while !iwindow.should_close()
         {
             unsafe
                 {
@@ -37,7 +35,7 @@ fn main()
                     gl::Clear(gl::COLOR_BUFFER_BIT);
                 }
 
-            window.swap_buffers();
+            iwindow.swap_buffers();
             glfw.poll_events();
         }
 }
