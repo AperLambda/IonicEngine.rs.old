@@ -4,8 +4,10 @@ extern crate glfw;
 use glfw::{Context};
 
 mod system;
+mod graphics;
 
 use system::context::{IonicContext, WindowMode};
+use graphics::Color;
 
 fn main()
 {
@@ -23,7 +25,7 @@ fn main()
 
     iwindow.make_current();
 
-    context.load_gl(&mut iwindow);
+    context.load_gl();
 
     let mut window = &mut iwindow.handle;
 

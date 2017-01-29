@@ -31,8 +31,8 @@ impl IonicContext
         IonicWindow::new(window, title)
     }
 
-    pub fn load_gl(&self, window: &mut IonicWindow)
+    pub fn load_gl(&self)
     {
-        gl::load_with(|symbol| window.handle.get_proc_address(symbol) as *const _);
+        gl::load_with(|symbol| self.glfw_context.get_proc_address_raw(symbol) as *const _);
     }
 }
