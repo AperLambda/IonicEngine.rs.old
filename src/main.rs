@@ -7,7 +7,7 @@ mod system;
 mod graphics;
 
 use system::context::{IonicContext, WindowMode};
-use graphics::Color;
+use graphics::*;
 
 fn main()
 {
@@ -27,11 +27,13 @@ fn main()
 
     context.load_gl();
 
+    let clear_color = COLOR_BLACK.to_float();
+
     while !iwindow.should_close()
         {
             unsafe
                 {
-                    gl::ClearColor(0.0, 0.0, 0.0, 1.0);
+                    gl::ClearColor(clear_color.0, clear_color.1, clear_color.2, clear_color.3);
                     gl::Clear(gl::COLOR_BUFFER_BIT);
                 }
 

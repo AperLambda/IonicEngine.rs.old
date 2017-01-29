@@ -53,18 +53,38 @@ impl Color
                 alpha: self.alpha
             }
     }
+
+    pub fn to_float(&self) -> (f32, f32, f32, f32)
+    {
+        (self.red as f32 / 255.0, self.green as f32 / 255.0, self.blue as f32 / 255.0, self.alpha as f32 / 255.0)
+    }
 }
 
 /// The black color.
-static COLOR_BLACK: Color = Color { red: 0, green: 0, blue: 0, alpha: 255 };
+pub static COLOR_BLACK: Color = Color { red: 0, green: 0, blue: 0, alpha: 255 };
 /// The white color.
-static COLOR_WHITE: Color = Color { red: 255, green: 255, blue: 255, alpha: 255 };
+pub static COLOR_WHITE: Color = Color { red: 255, green: 255, blue: 255, alpha: 255 };
 /// The red color.
-static COLOR_RED: Color = Color { red: 255, green: 0, blue: 0, alpha: 255 };
+pub static COLOR_RED: Color = Color { red: 255, green: 0, blue: 0, alpha: 255 };
 /// The green color.
-static COLOR_GREEN: Color = Color { red: 0, green: 255, blue: 255, alpha: 255 };
+pub static COLOR_GREEN: Color = Color { red: 0, green: 255, blue: 0, alpha: 255 };
 /// The blue color.
-static COLOR_BLUE: Color = Color { red: 0, green: 0, blue: 255, alpha: 255 };
+pub static COLOR_BLUE: Color = Color { red: 0, green: 0, blue: 255, alpha: 255 };
 
 pub struct IonicGraphics
-{}
+{
+    complement_x: f64,
+    complement_y: f64
+}
+
+
+pub trait GeneralIonicGraphics
+{
+    fn set_color(&self, color: Color)
+    {
+        /*unsafe
+            {
+                gl::Color
+            }*/
+    }
+}
