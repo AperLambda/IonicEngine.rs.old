@@ -49,6 +49,19 @@ impl Color
             lred += v;
         }
 
+        if lgreen > 255.0
+        {
+            let v = (green as f32 / 0.7 - 255.0);
+            lblue += v;
+            lred += v;
+        }
+
+        if lred > 255.0
+        {
+            let v = (red as f32 / 0.7 - 255.0);
+            lgreen += v;
+            lblue += v;
+        }
 
         blue = maths::min(lblue, 255.0) as u8;
         green = maths::min(lgreen, 255.0) as u8;
