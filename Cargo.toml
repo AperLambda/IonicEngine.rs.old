@@ -1,7 +1,9 @@
 [package]
 name = "ionic_engine"
 version = "1.0.0-1"
-authors = ["w67clement"]
+authors = ["w67clement <w67clement@gmail.com"]
+repository = "https://github.com/AperEntertainment/ionic_engine.git"
+readme = "README.md"
 
 [dependencies]
 gl = "0.6.*"

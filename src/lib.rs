@@ -1,6 +1,6 @@
-extern crate gl;
-extern crate glfw;
-extern crate aperutils;
+pub extern crate gl;
+pub extern crate glfw;
+pub extern crate aperutils;
 
 pub use glfw::{Action, Context, Glfw, Key};
 pub use aperutils::maths;
