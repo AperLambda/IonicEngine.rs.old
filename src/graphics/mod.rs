@@ -1,4 +1,6 @@
 use std::cmp;
+pub extern crate aperutils;
+use self::aperutils::maths;
 
 pub struct Color
 {
@@ -35,11 +37,14 @@ impl Color
                 blue = i;
             }
 
-        red = (red as f32 * 0.7) as u8;
-        green = (green as f32 * 0.7) as u8;
-        blue = (blue as f32 * 0.7) as u8;
+        red = maths::min(red as f32 / 0.7, 255.0) as u8;
+        green = maths::min(green as f32 / 0.7, 255.0) as u8;
+        blue = maths::min(blue as f32 / 0.7, 255.0) as u8;
 
-        return Color { red: if green < 255 { 255 } else { red }, green: if green < 255 { 255 } else { green }, blue: if blue < 255 { 255 } else { blue }, alpha: self.alpha }
+        return Color { red: cmp::min(red, 255),
+            green: cmp::min(green, 255),
+            blue: cmp::min(blue, 255),
+            alpha: self.alpha }
     }
 
     /// Creates a new Color who is darker than original.
@@ -47,9 +52,9 @@ impl Color
     {
         Color
             {
-                red: cmp::min((self.red as f32 / 0.7) as i8, 0) as u8,
-                green: cmp::min((self.green as f32 / 0.7) as i8, 0) as u8,
-                blue: cmp::min((self.blue as f32 / 0.7) as i8, 0) as u8,
+                red: cmp::max((self.red as f32 * 0.7) as i8, 0) as u8,
+                green: cmp::max((self.green as f32 * 0.7) as i8, 0) as u8,
+                blue: cmp::max((self.blue as f32 * 0.7) as i8, 0) as u8,
                 alpha: self.alpha
             }
     }
