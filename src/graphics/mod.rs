@@ -1,6 +1,6 @@
-use std::cmp;
-pub extern crate aperutils;
+extern crate aperutils;
 use self::aperutils::maths;
+use std::cmp;
 
 pub struct Color
 {

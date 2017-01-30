@@ -1,13 +1,9 @@
 extern crate gl;
 extern crate glfw;
+extern crate ionic_engine;
 
-use glfw::{Context};
-
-mod system;
-mod graphics;
-
-use system::context::{IonicContext, WindowMode};
-use graphics::*;
+use ionic_engine::system::context::{IonicContext, WindowMode};
+use ionic_engine::graphics::*;
 
 fn main()
 {
