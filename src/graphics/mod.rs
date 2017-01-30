@@ -1,4 +1,5 @@
 extern crate aperutils;
+
 use self::aperutils::maths;
 use std::cmp;
 
@@ -43,34 +44,32 @@ impl Color
         let mut lblue: f32 = blue as f32 / n;
 
         if lblue > 255.0
-        {
-            let v = (blue as f32 / n - 255.0);
-            if lgreen < v { lgreen += v; }
-            if lred < v { lred += v; }
-        }
-        else
-        if lgreen > 255.0
-        {
-            let v = (green as f32 / n - 255.0);
-            if lblue < v { lblue += v; }
-            if lred < v { lred += v; }
-        }
-        else
-        if lred > 255.0
-        {
-            let v = (red as f32 / n - 255.0);
-            if lgreen < v { lgreen += v; }
-            if lblue < v { lblue += v; }
-        }
+            {
+                let v = (blue as f32 / n - 255.0);
+                if lgreen < v { lgreen += v; }
+                if lred < v { lred += v; }
+            } else if lgreen > 255.0
+            {
+                let v = (green as f32 / n - 255.0);
+                if lblue < v { lblue += v; }
+                if lred < v { lred += v; }
+            } else if lred > 255.0
+            {
+                let v = (red as f32 / n - 255.0);
+                if lgreen < v { lgreen += v; }
+                if lblue < v { lblue += v; }
+            }
 
         blue = maths::min(lblue, 255.0) as u8;
         green = maths::min(lgreen, 255.0) as u8;
         red = maths::min(lred, 255.0) as u8;
 
-        return Color { red: cmp::min(red, 255),
+        return Color {
+            red: cmp::min(red, 255),
             green: cmp::min(green, 255),
             blue: cmp::min(blue, 255),
-            alpha: self.alpha }
+            alpha: self.alpha
+        }
     }
 
     /// Creates a new Color who is darker than original.
