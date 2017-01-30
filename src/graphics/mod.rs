@@ -16,6 +16,7 @@ impl Color
     pub fn lighter(&self) -> Color
     {
         let i: u8 = (1.0 / 0.3) as u8;
+        //let j: u8 = (255.0 / 0.7 - 255.0) as u8;
         let mut red = self.red;
         let mut green = self.green;
         let mut blue = self.blue;
@@ -37,9 +38,21 @@ impl Color
                 blue = i;
             }
 
-        red = maths::min(red as f32 / 0.7, 255.0) as u8;
-        green = maths::min(green as f32 / 0.7, 255.0) as u8;
-        blue = maths::min(blue as f32 / 0.7, 255.0) as u8;
+        let mut lred: f32 = red as f32 / 0.7;
+        let mut lgreen: f32 = green as f32 / 0.7;
+        let mut lblue: f32 = blue as f32 / 0.7;
+
+        if lblue > 255.0
+        {
+            let v = (blue as f32 / 0.7 - 255.0);
+            lgreen += v;
+            lred += v;
+        }
+
+
+        blue = maths::min(lblue, 255.0) as u8;
+        green = maths::min(lgreen, 255.0) as u8;
+        red = maths::min(lred, 255.0) as u8;
 
         return Color { red: cmp::min(red, 255),
             green: cmp::min(green, 255),
