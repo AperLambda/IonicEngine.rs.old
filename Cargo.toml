@@ -12,3 +12,6 @@ git = "https://github.com/PistonDevelopers/glfw-rs.git"
 # It's really stupid...
 # If the compile doesn't works, install CMake and glfw libraries on your system...
 #default-features = false
+
+[dependencies.aperutils]
+git = "https://github.com/AperEntertainment/aper-utils.git"
