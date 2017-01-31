@@ -24,7 +24,7 @@ fn main()
     context.load_gl();
 
     let clear_color = COLOR_BLACK.to_float();
-
+    
     while !iwindow.should_close()
         {
             unsafe
@@ -35,5 +35,9 @@ fn main()
 
             iwindow.swap_buffers();
             glfw.poll_events();
+
+            for (_, event) in glfw::flush_messages(&iwindow.events) {
+                println!("{:?}", event);
+            }
         }
 }
