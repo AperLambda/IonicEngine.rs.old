@@ -1,19 +1,22 @@
-use glfw::{Context, Window};
+use glfw::{Context, Window, WindowEvent};
+use std::sync::mpsc::Receiver;
 
 pub struct IonicWindow
 {
     pub handle: Window,
-    title: String
+    title: String,
+    pub events: Receiver<(f64, WindowEvent)>
 }
 
 impl IonicWindow
 {
-    pub fn new(handle: Window, title: &str) -> Self
+    pub fn new(handle: Window, title: &str, events: Receiver<(f64, WindowEvent)>) -> Self
     {
         IonicWindow
             {
                 handle: handle,
-                title: title.to_string()
+                title: title.to_string(),
+                events: events
             }
     }
 

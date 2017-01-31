@@ -27,8 +27,8 @@ impl IonicContext
 
     pub fn create_window(&self, title: &str, width: u32, height: u32, window_mode: WindowMode) -> IonicWindow
     {
-        let window = self.glfw_context.create_window(width, height, title, window_mode).expect("Faild to create GLFW window.").0;
-        IonicWindow::new(window, title)
+        let (window, events) = self.glfw_context.create_window(width, height, title, window_mode).expect("Failed to create GLFW window.");
+        IonicWindow::new(window, title, events)
     }
 
     pub fn load_gl(&self)
