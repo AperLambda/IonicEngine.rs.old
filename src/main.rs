@@ -32,7 +32,6 @@ fn main()
                     gl::ClearColor(clear_color.0, clear_color.1, clear_color.2, clear_color.3);
                     gl::Clear(gl::COLOR_BUFFER_BIT);
                 }
-
             iwindow.swap_buffers();
             glfw.poll_events();
 

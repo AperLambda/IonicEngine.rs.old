@@ -7,6 +7,7 @@ readme = "README.md"
 
 [dependencies]
 gl = "0.6.*"
+nalgebra = "0.9.*"
 
 [dependencies.glfw]
 git = "https://github.com/PistonDevelopers/glfw-rs.git"

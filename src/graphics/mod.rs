@@ -1,7 +1,15 @@
 extern crate aperutils;
 
-use self::aperutils::maths;
 use std::cmp;
+use std::path::Path;
+use self::aperutils::maths;
+use self::shader::Shader;
+use super::gl;
+
+pub mod shader;
+pub mod assets;
+pub use self::assets::gl_primitive::GLPrimitive;
+pub use self::assets::gpu_vectors::GPUVec;
 
 pub struct Color
 {
@@ -110,9 +118,28 @@ pub static COLOR_CYAN: Color = Color { red: 0, green: 255, blue: 255, alpha: 255
 pub struct IonicGraphics
 {
     complement_x: f64,
-    complement_y: f64
+    complement_y: f64,
+    vao: gl::types::GLuint,
+    vbo: gl::types::GLuint,
+    shader: Shader
 }
 
+impl IonicGraphics {
+    fn new(complement_x: f64, complement_y: f64, vshader_path: &Path, fshader_path: &Path) -> IonicGraphics {
+        let mut ionicGraphics = IonicGraphics {
+            complement_y: complement_y,
+            complement_x: complement_x,
+
+            vao: 0,
+            vbo: 0,
+            shader: Shader::new(vshader_path, fshader_path)
+        };
+
+
+
+        ionicGraphics
+    }
+}
 
 pub trait GeneralIonicGraphics
 {
