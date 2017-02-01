@@ -8,6 +8,7 @@ use super::gl;
 
 pub mod shader;
 pub mod assets;
+
 pub use self::assets::gl_primitive::GLPrimitive;
 pub use self::assets::gpu_vectors::GPUVec;
 
@@ -124,30 +125,28 @@ pub struct IonicGraphics
     shader: Shader
 }
 
-impl IonicGraphics {
-    fn new(complement_x: f64, complement_y: f64, vshader_path: &Path, fshader_path: &Path) -> IonicGraphics {
-        let mut ionicGraphics = IonicGraphics {
-            complement_y: complement_y,
-            complement_x: complement_x,
-
-            vao: 0,
-            vbo: 0,
-            shader: Shader::new(vshader_path, fshader_path)
-        };
-
-
-
-        ionicGraphics
-    }
-}
-
-pub trait GeneralIonicGraphics
+impl IonicGraphics
 {
-    fn set_color(&self, color: Color)
+    pub fn new(complement_x: f64, complement_y: f64, vshader_path: &Path, fshader_path: &Path) -> IonicGraphics
     {
-        /*unsafe
+        let mut ionic_graphics = IonicGraphics
             {
-                gl::Color
-            }*/
+                complement_y: complement_y,
+                complement_x: complement_x,
+
+                vao: 0,
+                vbo: 0,
+                shader: Shader::new(vshader_path, fshader_path)
+            };
+
+
+        ionic_graphics
     }
+
+    /*
+    pub fn set_color(color: Color)
+    {
+        // Some code here
+    }
+    */
 }

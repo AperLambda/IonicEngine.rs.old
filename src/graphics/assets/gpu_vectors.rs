@@ -6,7 +6,7 @@ use gl;
 use gl::types::*;
 use super::gl_primitive::GLPrimitive;
 
-macro_rules! verify(
+macro_rules! verify (
     ($e: expr) => {
         unsafe {
             let res = $e;
@@ -43,12 +43,12 @@ impl Drop for GLHandle {
 // FIXME: generalize this for any resource: GPUResource
 /// A vector of elements that can be loaded to the GPU, on the RAM, or both.
 pub struct GPUVec<T> {
-    trash:      bool,
-    len:        usize,
-    buf_type:   BufferType,
+    trash: bool,
+    len: usize,
+    buf_type: BufferType,
     alloc_type: AllocationType,
-    handle:     Option<(usize, GLHandle)>,
-    data:       Option<Vec<T>>,
+    handle: Option<(usize, GLHandle)>,
+    data: Option<Vec<T>>,
 }
 
 // FIXME: implement Clone
@@ -57,12 +57,12 @@ impl<T: GLPrimitive> GPUVec<T> {
     /// Creates a new `GPUVec` that is not yet uploaded to the GPU.
     pub fn new(data: Vec<T>, buf_type: BufferType, alloc_type: AllocationType) -> GPUVec<T> {
         GPUVec {
-            trash:      true,
-            len:        data.len(),
-            buf_type:   buf_type,
+            trash: true,
+            len: data.len(),
+            buf_type: buf_type,
             alloc_type: alloc_type,
-            handle:     None,
-            data:       Some(data)
+            handle: None,
+            data: Some(data)
         }
     }
 
@@ -72,11 +72,9 @@ impl<T: GLPrimitive> GPUVec<T> {
         if self.trash {
             match self.data {
                 Some(ref d) => d.len(),
-                None        => panic!("This should never happend.")
-
+                None => panic!("This should never happend.")
             }
-        }
-        else {
+        } else {
             self.len
         }
     }
@@ -123,21 +121,20 @@ impl<T: GLPrimitive> GPUVec<T> {
     #[inline]
     pub fn load_to_gpu(&mut self) {
         if !self.is_on_gpu() {
-            let buf_type   = self.buf_type;
+            let buf_type = self.buf_type;
             let alloc_type = self.alloc_type;
-            let len        = &mut self.len;
+            let len = &mut self.len;
 
             self.handle = self.data.as_ref().map(|d| {
                 *len = d.len();
                 (d.len(), GLHandle::new(upload_buffer(&d[..], buf_type, alloc_type)))
             });
-        }
-        else if self.trash() {
+        } else if self.trash() {
             for d in self.data.iter() {
                 self.len = d.len();
 
                 match self.handle {
-                    None => { },
+                    None => {},
                     Some((ref mut len, ref handle)) => {
                         let handle = handle.handle();
 
@@ -177,8 +174,8 @@ impl<T: GLPrimitive> GPUVec<T> {
     pub fn load_to_ram(&mut self) {
         if !self.is_on_ram() && self.is_on_gpu() {
             assert!(!self.trash);
-            let     handle = self.handle.as_ref().map(|&(_, ref h)| h.handle()).unwrap();
-            let mut data   = Vec::with_capacity(self.len);
+            let handle = self.handle.as_ref().map(|&(_, ref h)| h.handle()).unwrap();
+            let mut data = Vec::with_capacity(self.len);
 
             unsafe { data.set_len(self.len) };
             download_buffer(handle, self.buf_type, &mut data[..]);
@@ -190,9 +187,9 @@ impl<T: GLPrimitive> GPUVec<T> {
     #[inline]
     pub fn unload_from_gpu(&mut self) {
         let _ = self.handle.as_ref().map(|&(_, ref h)| unsafe { verify!(gl::DeleteBuffers(1, &h.handle())) });
-        self.len    = self.len();
+        self.len = self.len();
         self.handle = None;
-        self.trash  = false;
+        self.trash = false;
     }
 
     /// Removes this resource from the RAM.
@@ -232,7 +229,7 @@ impl BufferType {
     #[inline]
     fn to_gl(&self) -> GLuint {
         match *self {
-            BufferType::Array        => gl::ARRAY_BUFFER,
+            BufferType::Array => gl::ARRAY_BUFFER,
             BufferType::ElementArray => gl::ELEMENT_ARRAY_BUFFER
         }
     }
@@ -253,17 +250,17 @@ impl AllocationType {
     #[inline]
     fn to_gl(&self) -> GLuint {
         match *self {
-            AllocationType::StaticDraw  => gl::STATIC_DRAW,
+            AllocationType::StaticDraw => gl::STATIC_DRAW,
             AllocationType::DynamicDraw => gl::DYNAMIC_DRAW,
-            AllocationType::StreamDraw  => gl::STREAM_DRAW
+            AllocationType::StreamDraw => gl::STREAM_DRAW
         }
     }
 }
 
 /// Allocates and uploads a buffer to the gpu.
 #[inline]
-pub fn upload_buffer<T: GLPrimitive>(buf:             &[T],
-                                     buf_type:        BufferType,
+pub fn upload_buffer<T: GLPrimitive>(buf: &[T],
+                                     buf_type: BufferType,
                                      allocation_type: AllocationType)
                                      -> GLuint {
     // Upload values of vertices
@@ -296,10 +293,10 @@ pub fn download_buffer<T: GLPrimitive>(buf_id: GLuint, buf_type: BufferType, out
 ///
 /// Returns the number of element the bufer on the gpu can hold.
 #[inline]
-pub fn update_buffer<T: GLPrimitive>(buf:                 &[T],
-                                     gpu_buf_len:         usize,
-                                     gpu_buf_id:          GLuint,
-                                     gpu_buf_type:        BufferType,
+pub fn update_buffer<T: GLPrimitive>(buf: &[T],
+                                     gpu_buf_len: usize,
+                                     gpu_buf_id: GLuint,
+                                     gpu_buf_type: BufferType,
                                      gpu_allocation_type: AllocationType)
                                      -> usize {
     unsafe {
@@ -313,8 +310,7 @@ pub fn update_buffer<T: GLPrimitive>(buf:                 &[T],
                     mem::transmute(&buf[0])));
 
             gpu_buf_len
-        }
-        else {
+        } else {
             verify!(gl::BufferData(
                     gpu_buf_type.to_gl(),
                     (buf.len() * mem::size_of::<T>()) as GLsizeiptr,

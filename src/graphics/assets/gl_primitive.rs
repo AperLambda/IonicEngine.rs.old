@@ -6,7 +6,7 @@ use gl;
 use gl::types::*;
 use na::{Point2, Point3, Vector2, Vector3, Matrix2, Matrix3, Matrix4, Rotation2, Rotation3};
 
-macro_rules! verify(
+macro_rules! verify (
     ($e: expr) => {
         unsafe {
             let res = $e;

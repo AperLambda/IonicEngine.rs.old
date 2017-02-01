@@ -11,7 +11,7 @@ use super::gl;
 use super::{GLPrimitive, GPUVec};
 use gl::types::*;
 
-macro_rules! verify(
+macro_rules! verify (
     ($e: expr) => {
         unsafe {
             let res = $e;
@@ -27,6 +27,7 @@ pub struct Shader
     vshader: gl::types::GLuint,
     fshader: gl::types::GLuint
 }
+
 impl Shader
 {
     pub fn new(vshader_path: &Path, fshader_path: &Path) -> Shader
@@ -35,22 +36,22 @@ impl Shader
         let mut fshader = String::new();
 
         if File::open(vshader_path).map(|mut v| v.read_to_string(&mut vshader)).is_err()
-        {
-            panic!("VShader cannot be loaded");
-        }
+            {
+                panic!("VShader cannot be loaded");
+            }
         if File::open(fshader_path).map(|mut f| f.read_to_string(&mut fshader)).is_err()
-        {
-            panic!("FShader cannot be loaded");
-        }
+            {
+                panic!("FShader cannot be loaded");
+            }
 
         let (program, vshader, fshader) = load_shader_program(&vshader[..], &fshader[..]);
 
         Shader
-        {
-            program: program,
-            vshader: vshader,
-            fshader: fshader
-        }
+            {
+                program: program,
+                vshader: vshader,
+                fshader: fshader
+            }
     }
 
     pub fn get_attrib<T: GLPrimitive>(&self, name: &str) -> Option<ShaderAttribute<T>>
@@ -60,8 +61,7 @@ impl Shader
 
         if unsafe { gl::GetError() } == 0 && location != -1 {
             Some(ShaderAttribute { id: location as GLuint, data_type: PhantomData })
-        }
-        else {
+        } else {
             None
         }
     }
@@ -95,33 +95,32 @@ impl<T: GLPrimitive> ShaderAttribute<T>
         vector.bind();
 
         unsafe
-        {
-            verify!(gl::VertexAttribPointer(
+            {
+                verify!(gl::VertexAttribPointer(
                         self.id,
                         GLPrimitive::size(None::<T>) as i32,
                         GLPrimitive::gl_type(None::<T>),
                         gl::FALSE,
                         0,
                         ptr::null()));
-        }
+            }
     }
     pub fn bind_sub_buffer(&mut self, vector: &mut GPUVec<T>, strides: usize, start_index: usize)
     {
         vector.bind();
 
         unsafe
-        {
-            verify!(gl::VertexAttribPointer(
+            {
+                verify!(gl::VertexAttribPointer(
                         self.id,
                         GLPrimitive::size(None::<T>) as i32,
                         GLPrimitive::gl_type(None::<T>),
                         gl::FALSE,
                         ((strides + 1) * mem::size_of::<T>()) as GLint,
                         mem::transmute(start_index * mem::size_of::<T>())));
-        }
+            }
     }
 }
-
 
 
 /// Loads a shader program using the given vertex and fragment shader sources
@@ -133,18 +132,18 @@ fn load_shader_program(vshader_r: &str, fshader_r: &str) -> (GLuint, GLuint, GLu
     let fragment_shader = CString::new(fshader_r.as_bytes()).unwrap();
 
     unsafe
-    {
-        verify!(gl::ShaderSource(vshader, 1, &vertex_shader.as_ptr(), ptr::null()));
-        verify!(gl::CompileShader(vshader));
-    }
+        {
+            verify!(gl::ShaderSource(vshader, 1, &vertex_shader.as_ptr(), ptr::null()));
+            verify!(gl::CompileShader(vshader));
+        }
     check_shader_error(vshader);
 
     let fshader = verify!(gl::CreateShader(gl::FRAGMENT_SHADER));
     unsafe
-    {
-        verify!(gl::ShaderSource(fshader, 1, &fragment_shader.as_ptr(), ptr::null()));
-        verify!(gl::CompileShader(fshader));
-    }
+        {
+            verify!(gl::ShaderSource(fshader, 1, &fragment_shader.as_ptr(), ptr::null()));
+            verify!(gl::CompileShader(fshader));
+        }
 
     check_shader_error(fshader);
 
@@ -162,29 +161,29 @@ fn check_shader_error(shader: GLuint) {
     let mut compiles: i32 = 0;
 
     unsafe
-    {
-        gl::GetShaderiv(shader, gl::COMPILE_STATUS, &mut compiles);
-
-        if compiles == 0
         {
-            println!("Shader compilation failed.");
-            let mut info_log_len = 0;
+            gl::GetShaderiv(shader, gl::COMPILE_STATUS, &mut compiles);
 
-            gl::GetShaderiv(shader, gl::INFO_LOG_LENGTH, &mut info_log_len);
+            if compiles == 0
+                {
+                    println!("Shader compilation failed.");
+                    let mut info_log_len = 0;
 
-            if info_log_len > 0
-            {
-                // error check for fail to allocate memory omitted
-                let mut chars_written = 0;
-                let info_log: String = repeat(' ').take(info_log_len as usize).collect();
+                    gl::GetShaderiv(shader, gl::INFO_LOG_LENGTH, &mut info_log_len);
 
-                let c_str = CString::new(info_log.as_bytes()).unwrap();
-                gl::GetShaderInfoLog(shader, info_log_len, &mut chars_written, c_str.as_ptr() as *mut _);
+                    if info_log_len > 0
+                        {
+                            // error check for fail to allocate memory omitted
+                            let mut chars_written = 0;
+                            let info_log: String = repeat(' ').take(info_log_len as usize).collect();
 
-                let bytes = c_str.as_bytes();
-                let bytes = &bytes[.. bytes.len() - 1];
-                panic!("Shader compilation failed: {}", str::from_utf8(bytes).unwrap());
-            }
+                            let c_str = CString::new(info_log.as_bytes()).unwrap();
+                            gl::GetShaderInfoLog(shader, info_log_len, &mut chars_written, c_str.as_ptr() as *mut _);
+
+                            let bytes = c_str.as_bytes();
+                            let bytes = &bytes[..bytes.len() - 1];
+                            panic!("Shader compilation failed: {}", str::from_utf8(bytes).unwrap());
+                        }
+                }
         }
-    }
 }
