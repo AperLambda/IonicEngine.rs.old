@@ -25,12 +25,17 @@ fn main()
 
     let clear_color = COLOR_BLACK.to_float();
 
+    let mut ig = IonicGraphics::new(0.0, 0.0, "src/shaders/vertex.c", "src/shaders/fragment.c");
+    ig = ig.bind_vao();
+
     while !iwindow.should_close()
         {
             unsafe
                 {
                     gl::ClearColor(clear_color.0, clear_color.1, clear_color.2, clear_color.3);
                     gl::Clear(gl::COLOR_BUFFER_BIT);
+                    gl::UseProgram(ig.shader.program);
+                    
                 }
             iwindow.swap_buffers();
             glfw.poll_events();

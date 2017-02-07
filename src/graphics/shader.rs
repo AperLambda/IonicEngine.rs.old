@@ -23,7 +23,7 @@ macro_rules! verify (
 
 pub struct Shader
 {
-    program: gl::types::GLuint,
+    pub program: gl::types::GLuint,
     vshader: gl::types::GLuint,
     fshader: gl::types::GLuint
 }

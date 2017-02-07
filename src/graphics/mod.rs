@@ -11,6 +11,7 @@ pub mod assets;
 
 pub use self::assets::gl_primitive::GLPrimitive;
 pub use self::assets::gpu_vectors::GPUVec;
+pub use self::assets::vao::VAO;
 
 pub struct Color
 {
@@ -116,33 +117,50 @@ pub static COLOR_ORANGE: Color = Color { red: 255, green: 128, blue: 0, alpha: 2
 /// The cyan color.
 pub static COLOR_CYAN: Color = Color { red: 0, green: 255, blue: 255, alpha: 255 };
 
+
+/// Still in developement
+#[allow(dead_code, unused_variables)]
 pub struct IonicGraphics
 {
-    complement_x: f64,
-    complement_y: f64,
-    vao: gl::types::GLuint,
-    vbo: gl::types::GLuint,
-    shader: Shader
+    pub complement_x: f64,
+    pub complement_y: f64,
+    pub vao: VAO,
+    pub vbo: gl::types::GLuint,
+    pub shader: Shader
 }
 
 impl IonicGraphics
 {
-    pub fn new(complement_x: f64, complement_y: f64, vshader_path: &Path, fshader_path: &Path) -> IonicGraphics
+    pub fn new(complement_x: f64, complement_y: f64, vshader_path: &str, fshader_path: &str) -> IonicGraphics
     {
-        let mut ionic_graphics = IonicGraphics
+        let ionic_graphics = IonicGraphics
             {
                 complement_y: complement_y,
                 complement_x: complement_x,
 
-                vao: 0,
+                vao: VAO::zero(),
                 vbo: 0,
-                shader: Shader::new(vshader_path, fshader_path)
+                shader: Shader::new(Path::new(vshader_path), Path::new(fshader_path))
             };
-
+        
 
         ionic_graphics
     }
 
+    pub fn bind_vao(mut self) -> IonicGraphics
+    {
+        let vao = VAO::new().bind();
+
+        // unbind vbo?
+        
+        self.vao = vao;
+        self
+    }
+
+    pub fn bind_vbo(self)
+    {
+        //self.vbo.bind();
+    }
     /*
     pub fn set_color(color: Color)
     {
