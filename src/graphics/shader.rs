@@ -1,3 +1,5 @@
+#![allow(unused_unsafe, dead_code)]
+
 use std::ffi::CString;
 use std::fs::File;
 use std::io::Read;
@@ -10,16 +12,6 @@ use std::str;
 use super::gl;
 use super::{GLPrimitive, GPUVec};
 use gl::types::*;
-
-macro_rules! verify (
-    ($e: expr) => {
-        unsafe {
-            let res = $e;
-            assert_eq!(gl::GetError(), 0);
-            res
-        }
-    }
-);
 
 pub struct Shader
 {
@@ -69,6 +61,63 @@ impl Shader
     pub fn use_program(&mut self)
     {
         verify!(gl::UseProgram(self.program));
+        let out_color = CString::new("out_color".as_bytes());
+        verify!(gl::BindFragDataLocation(self.program, 0, out_color.unwrap().as_ptr()));
+        self.bind_pos_attr();
+    }
+
+    pub fn bind_pos_attr(&mut self)
+    {
+        unsafe
+            {
+                // use the get_attrib here
+                let pos_attr = gl::GetAttribLocation(self.program, CString::new("position".as_bytes()).unwrap().as_ptr());
+                gl::EnableVertexAttribArray(pos_attr as GLuint);
+                gl::VertexAttribPointer(pos_attr as GLuint, 2, gl::FLOAT,
+                                        gl::FALSE as GLboolean, 0, ptr::null());
+            }
+    }
+
+    pub fn get_uniform_location(&mut self, uniform: &str) -> i32
+    {
+        let name: GLint;
+        unsafe {
+            name = gl::GetUniformLocation(self.program, CString::new(uniform.as_bytes()).unwrap().as_ptr());
+        }
+        
+        match name
+        {
+          -1 => {
+                // uniform not found
+                println!("Uniform not found!!");
+                name
+            }
+          _ => { name }
+        }
+    }
+
+    pub fn set_uniform_float(&mut self, uniform: i32, value: GLfloat)
+    {
+        unsafe
+            {
+                gl::Uniform1f(uniform, value);
+            }
+    }
+
+    pub fn set_uniform_2_float(&mut self, uniform: i32, value1: GLfloat, value2: GLfloat)
+    {
+        unsafe
+            {
+                gl::Uniform2f(uniform, value1, value2);
+            }
+    }
+
+    pub fn set_uniform_3_float(&mut self, uniform: i32, value1: GLfloat, value2: GLfloat, value3: GLfloat)
+    {
+        unsafe
+            {
+                gl::Uniform3f(uniform, value1, value2, value3);
+            }
     }
 }
 
@@ -120,16 +169,26 @@ impl<T: GLPrimitive> ShaderAttribute<T>
                         mem::transmute(start_index * mem::size_of::<T>())));
             }
     }
+
+    
 }
 
 
 /// Loads a shader program using the given vertex and fragment shader sources
-fn load_shader_program(vshader_r: &str, fshader_r: &str) -> (GLuint, GLuint, GLuint)
+pub fn load_shader_program(vshader_r: &str, fshader_r: &str) -> (GLuint, GLuint, GLuint)
+{
+    let vshader = create_vertex_shader(vshader_r);
+
+    let fshader = create_fragment_shader(fshader_r);
+
+    (create_program(vshader, fshader), vshader, fshader)
+}
+
+pub fn create_vertex_shader(vshader_r: &str) -> GLuint
 {
     let vshader = verify!(gl::CreateShader(gl::VERTEX_SHADER));
 
     let vertex_shader = CString::new(vshader_r.as_bytes()).unwrap();
-    let fragment_shader = CString::new(fshader_r.as_bytes()).unwrap();
 
     unsafe
         {
@@ -138,7 +197,15 @@ fn load_shader_program(vshader_r: &str, fshader_r: &str) -> (GLuint, GLuint, GLu
         }
     check_shader_error(vshader);
 
+    vshader
+}
+
+pub fn create_fragment_shader(fshader_r: &str) -> GLuint
+{
     let fshader = verify!(gl::CreateShader(gl::FRAGMENT_SHADER));
+
+    let fragment_shader = CString::new(fshader_r.as_bytes()).unwrap();
+
     unsafe
         {
             verify!(gl::ShaderSource(fshader, 1, &fragment_shader.as_ptr(), ptr::null()));
@@ -147,13 +214,17 @@ fn load_shader_program(vshader_r: &str, fshader_r: &str) -> (GLuint, GLuint, GLu
 
     check_shader_error(fshader);
 
+    fshader
+}
 
+pub fn create_program(vshader: GLuint, fshader: GLuint) -> GLuint
+{
     let program = verify!(gl::CreateProgram());
     verify!(gl::AttachShader(program, vshader));
     verify!(gl::AttachShader(program, fshader));
     verify!(gl::LinkProgram(program));
 
-    (program, vshader, fshader)
+    program
 }
 
 /// Checks if the provided shader handle is valid

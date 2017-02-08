@@ -5,13 +5,17 @@ use std::path::Path;
 use self::aperutils::maths;
 use self::shader::Shader;
 use super::gl;
+use super::gl::types::*;
 
+#[macro_use]
+pub mod macros;
 pub mod shader;
 pub mod assets;
 
 pub use self::assets::gl_primitive::GLPrimitive;
 pub use self::assets::gpu_vectors::GPUVec;
 pub use self::assets::vao::VAO;
+pub use self::assets::vbo::VBO;
 
 pub struct Color
 {
@@ -55,17 +59,17 @@ impl Color
 
         if lblue > 255.0
             {
-                let v = (blue as f32 / n - 255.0);
+                let v = blue as f32 / n - 255.0;
                 if lgreen < v { lgreen += v; }
                 if lred < v { lred += v; }
             } else if lgreen > 255.0
             {
-                let v = (green as f32 / n - 255.0);
+                let v = green as f32 / n - 255.0;
                 if lblue < v { lblue += v; }
                 if lred < v { lred += v; }
             } else if lred > 255.0
             {
-                let v = (red as f32 / n - 255.0);
+                let v = red as f32 / n - 255.0;
                 if lgreen < v { lgreen += v; }
                 if lblue < v { lblue += v; }
             }
@@ -125,7 +129,7 @@ pub struct IonicGraphics
     pub complement_x: f64,
     pub complement_y: f64,
     pub vao: VAO,
-    pub vbo: gl::types::GLuint,
+    pub vbo: VBO,
     pub shader: Shader
 }
 
@@ -139,7 +143,7 @@ impl IonicGraphics
                 complement_x: complement_x,
 
                 vao: VAO::zero(),
-                vbo: 0,
+                vbo: VBO::zero(),
                 shader: Shader::new(Path::new(vshader_path), Path::new(fshader_path))
             };
         
@@ -147,20 +151,44 @@ impl IonicGraphics
         ionic_graphics
     }
 
-    pub fn bind_vao(mut self) -> IonicGraphics
+    pub fn bind_vao(&mut self)
     {
-        let vao = VAO::new().bind();
-
-        // unbind vbo?
-        
-        self.vao = vao;
-        self
+        self.vao = VAO::new();
+        self.vao.bind();
     }
 
-    pub fn bind_vbo(self)
+    pub fn bind_vbo(&mut self, vertex: &[GLfloat])
     {
-        //self.vbo.bind();
+        self.vbo = VBO::new();
+        self.vbo.bind();
+        self.vbo.bind_vertex(vertex);
     }
+
+    pub fn use_program(&mut self)
+    {
+        self.shader.use_program();
+    }
+
+    pub fn get_uniform_location(&mut self, name: &str) -> i32
+    {
+        self.shader.get_uniform_location(name)
+    }
+
+    pub fn set_uniform_float(&mut self, uniform: i32, value: GLfloat)
+    {
+        self.shader.set_uniform_float(uniform, value);
+    }
+
+    pub fn set_uniform_2_float(&mut self, uniform: i32, value1: GLfloat, value2: GLfloat)
+    {
+        self.shader.set_uniform_2_float(uniform, value1, value2);
+    }
+
+    pub fn set_uniform_3_float(&mut self, uniform: i32, value1: GLfloat, value2: GLfloat, value3: GLfloat)
+    {
+        self.shader.set_uniform_3_float(uniform, value1, value2, value3);
+    }
+
     /*
     pub fn set_color(color: Color)
     {

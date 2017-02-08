@@ -1,20 +1,13 @@
+#![allow(unused_unsafe)]
+
 /// Structures that a gpu buffer may contain.
 /// Taken from https://github.com/sebcrozet/kiss3d/blob/master/src/resource/gl_primitive.rs
+
 
 use std::mem;
 use gl;
 use gl::types::*;
 use na::{Point2, Point3, Vector2, Vector3, Matrix2, Matrix3, Matrix4, Rotation2, Rotation3};
-
-macro_rules! verify (
-    ($e: expr) => {
-        unsafe {
-            let res = $e;
-            assert_eq!(gl::GetError(), 0);
-            res
-        }
-    }
-);
 
 /// Trait implemented by structures that can be uploaded to a uniform or contained by a gpu array.
 pub trait GLPrimitive: Copy {

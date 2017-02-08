@@ -1,3 +1,5 @@
+#![allow(unused_unsafe, dead_code)]
+
 /// Wrapper for an OpenGL buffer object.
 /// Taken from https://github.com/sebcrozet/kiss3d/blob/master/src/resource/gpu_vector.rs
 
@@ -6,15 +8,6 @@ use gl;
 use gl::types::*;
 use super::gl_primitive::GLPrimitive;
 
-macro_rules! verify (
-    ($e: expr) => {
-        unsafe {
-            let res = $e;
-            assert_eq!(gl::GetError(), 0);
-            res
-        }
-    }
-);
 
 struct GLHandle {
     handle: GLuint
