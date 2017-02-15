@@ -11,6 +11,7 @@ use super::gl::types::*;
 pub mod macros;
 pub mod shader;
 pub mod assets;
+pub mod primitives;
 
 pub use self::assets::gl_primitive::GLPrimitive;
 pub use self::assets::gpu_vectors::GPUVec;

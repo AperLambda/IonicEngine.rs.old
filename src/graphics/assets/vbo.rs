@@ -49,13 +49,16 @@ impl VBO
 
     pub fn bind_vertex(&mut self, vertex: &[GLfloat])
     {
-        unsafe
-            {
-                
-                gl::BufferData(gl::ARRAY_BUFFER,
-                       (vertex.len() * mem::size_of::<GLfloat>()) as GLsizeiptr,
-                       mem::transmute(&vertex[0]),
-                       gl::STATIC_DRAW);
-            }
+        if self.name != 0
+        {
+            unsafe
+                {
+                    
+                    gl::BufferData(gl::ARRAY_BUFFER,
+                           (vertex.len() * mem::size_of::<GLfloat>()) as GLsizeiptr,
+                           mem::transmute(&vertex[0]),
+                           gl::STATIC_DRAW);
+                }
+        }
     }
 }

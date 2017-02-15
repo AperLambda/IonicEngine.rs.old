@@ -35,4 +35,10 @@ impl IonicContext
     {
         gl::load_with(|symbol| self.glfw_context.get_proc_address_raw(symbol) as *const _);
     }
+
+    // Sets the interval between two draws (default: 1)
+    pub fn set_interval(&mut self, interval: u32)
+    {
+        self.glfw_context.set_swap_interval(glfw::SwapInterval::Sync(interval));
+    }
 }

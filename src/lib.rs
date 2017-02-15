@@ -8,5 +8,6 @@ pub use aperutils::maths;
 
 pub mod graphics;
 pub mod system;
+pub mod physics;
 
 pub static VERSION: &'static str = "1.0.0-1";

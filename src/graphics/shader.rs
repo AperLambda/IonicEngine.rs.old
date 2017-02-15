@@ -119,6 +119,8 @@ impl Shader
                 gl::Uniform3f(uniform, value1, value2, value3);
             }
     }
+
+    
 }
 
 pub struct ShaderAttribute<T>
