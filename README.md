@@ -4,6 +4,11 @@
 
 IonicEngine is an multimedia graphic library in Rust. It uses [glfw-rs](https://github.com/PistonDevelopers/glfw-rs).
 
+It is focused on the creation of GUI, like frames, buttons, menus...
+
+It is still in development, we'd be glad if you helped us!
+
+
 ## Using IonicEngine
 
 ### Prerequisites
